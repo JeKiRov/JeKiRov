@@ -680,3 +680,87 @@ h1 {
     text-align: justify;
     /* Clean edges */
 }
+/* ========================================= */
+/* ?? MOBILE OPTIMIZATION (Responsive)       */
+/* ========================================= */
+@media (max-width: 768px) {
+    /* 1. Header & Nav */
+    header {
+        padding: 0;
+        background: rgba(0,0,0,0.95);
+    }
+
+    nav ul {
+        gap: 20px;
+        padding: 10px;
+        flex-wrap: wrap; /* Allow menu items to stack */
+        justify-content: center;
+    }
+
+    nav a {
+        font-size: 0.9rem; /* Smaller menu text */
+    }
+
+    /* 2. Typography Sizing */
+    h1 {
+        font-size: 2.5rem; /* Resize 5rem -> 2.5rem */
+    }
+
+    .subtitle {
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+    }
+
+    h2 {
+        font-size: 2rem;
+    }
+
+    /* 3. Grid & Layout */
+    .grid {
+        /* Unlock the 400px limit, allow full width on mobile */
+        grid-template-columns: 1fr; 
+        gap: 20px;
+    }
+
+    .content {
+        padding: 0 10px; /* Prevent edge touching */
+    }
+    
+    section {
+        padding: 80px 10px; /* Reduced vertical padding */
+    }
+
+    /* 4. Cards & Components */
+    .card {
+        padding: 30px 20px;
+        min-height: auto; /* Remove fixed height constraint */
+    }
+
+    .contact-box {
+        min-width: unset; /* Allow box to shrink */
+        width: 100%;
+        padding: 20px;
+    }
+
+    #email-text {
+        font-size: 0.9rem;
+        word-break: break-all; /* Prevent long email overflow */
+    }
+
+    /* 5. Social Icons */
+    .social-links {
+        bottom: 5%; /* Move up slightly */
+        gap: 15px;
+    }
+    
+    .btn-icon {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+    
+    #about p {
+        font-size: 1rem;
+        text-align: left; /* Justify looks bad on thin screens */
+    }
+}
+
