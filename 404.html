@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 | ACCESS DENIED</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:;">
+
+    <style>
+        :root {
+            --bg-color: #000000;
+            --tech-red: #ff0000;
+            --dark-red: #330000;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--tech-red);
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .overlay {
+            background: rgba(0, 0, 0, 0.85);
+            padding: 50px;
+            border: 2px solid var(--tech-red);
+            box-shadow: 0 0 50px rgba(255, 0, 0, 0.3);
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            z-index: 10;
+        }
+
+        h1 {
+            font-size: 8rem;
+            margin: 0;
+            text-shadow: 0 0 20px var(--tech-red);
+            line-height: 1;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            margin: 10px 0 30px;
+            letter-spacing: 5px;
+            background: var(--tech-red);
+            color: black;
+            padding: 5px;
+        }
+
+        p {
+            font-size: 1.2rem;
+            margin: 10px 0;
+            opacity: 0.9;
+        }
+
+        .blink {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 15px 30px;
+            border: 1px solid var(--tech-red);
+            color: var(--tech-red);
+            text-decoration: none;
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: all 0.3s;
+            background: transparent;
+        }
+
+        .btn:hover {
+            background: var(--tech-red);
+            color: black;
+            box-shadow: 0 0 20px var(--tech-red);
+        }
+
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.5) 51%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 5;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="scanlines"></div>
+    <canvas id="bg-canvas"></canvas>
+
+    <div class="overlay">
+        <h1>404</h1>
+        <h2>ACCESS DENIED</h2>
+        <p>This sector is restricted.</p>
+        <p>Your presence has been logged.</p>
+        <p style="margin-top: 30px; font-size: 0.9rem;">TRACE ID: 0xA91F44<span class="blink">_</span></p>
+
+        <a href="index.html" class="btn">RETURN TO SAFETY</a>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+
+        // Custom Red Matrix Rain
+        const hex = '0123456789ABCDEF';
+
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        const fontSize = 14;
+        const columns = Math.ceil(width / fontSize);
+        const drops = Array(columns).fill(1);
+
+        function draw() {
+            // Red trail effect
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, width, height);
+
+            ctx.fillStyle = '#ff0000'; // Pure Red
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = hex.charAt(Math.floor(Math.random() * hex.length));
+
+                // Random flashes of white/bright red
+                if (Math.random() > 0.98) {
+                    ctx.fillStyle = '#ffffff';
+                } else {
+                    ctx.fillStyle = '#ff0000';
+                }
+
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                // Reset drop to top with randomness
+                if (drops[i] * fontSize > height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+
+                // Reset color back to red for next character
+                ctx.fillStyle = '#ff0000';
+            }
+        }
+
+        setInterval(draw, 33);
+    </script>
+</body>
+
+</html>

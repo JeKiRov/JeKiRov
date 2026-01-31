@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Typing Effect
-    const textToType = "JEKIRO PORTFOLIO"; // Placeholder for user's name
+    const textToType = "AdriÃ¡n Navarro Escudero"; // Placeholder for user's name
     const typingElement = document.getElementById('typing-text');
     let typeIndex = 0;
 
@@ -88,3 +88,72 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+    // Contact Button Copy Functionality
+    const contactBtn = document.getElementById('contact-button');
+    if (contactBtn) {
+        contactBtn.addEventListener('click', () => {
+            const emailText = document.getElementById('email-text').innerText;
+            const hint = document.querySelector('.copy-hint');
+
+            // Fallback for file:// protocol or incompatible browsers
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(emailText).then(() => {
+                    showCopied(hint);
+                }).catch(err => {
+                    fallbackCopyText(emailText, hint);
+                });
+            } else {
+                fallbackCopyText(emailText, hint);
+            }
+        });
+    }
+
+    function fallbackCopyText(text, hintElement) {
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.style.top = '0';
+        textArea.style.left = '0';
+        textArea.style.position = 'fixed'; // Avoid scrolling
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        try {
+            const successful = document.execCommand('copy');
+            if (successful) {
+                showCopied(hintElement);
+            } else {
+                hintElement.innerText = 'Error al copiar';
+            }
+        } catch (err) {
+            hintElement.innerText = 'Error al copiar';
+            console.error('Fallback verify failed', err);
+        }
+
+        document.body.removeChild(textArea);
+    }
+
+    function showCopied(element) {
+        const originalText = element.innerText;
+        element.style.color = '#4d88ff'; // Feedback color
+        element.innerText = '¡Copiado!';
+        setTimeout(() => {
+            element.innerText = originalText; // Restore original text
+            element.style.color = '';
+        }, 2000);
+    }
+
+
+    // ANTI-CLICKJACKING & SECURITY (Frame Buster)
+    // Protege contra ataques donde meten tu web en un iframe invisible
+    if (window.self !== window.top) {
+        window.top.location = window.self.location;
+    }
+
+    // CONSOLE WARNING
+    // Disuade a curiosos de pegar scripts maliciosos (Self-XSS)
+    console.log('%c¡DETENTE!', 'color: red; font-size: 50px; font-weight: bold; text-shadow: 2px 2px black;');
+    console.log('%cEsta es una zona segura. Si alguien te ha dicho que pegues código aquí, es un ataque.', 'font-size: 18px; color: white;');
+    console.log('%cSystem Monitor: Active. All interactions logged.', 'font-size: 12px; color: #4d88ff;');
+
