@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 | ACCESS DENIED</title>
+    <title>404 | ACCESO DENEGADO</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
@@ -15,8 +15,12 @@
 
     <style>
         :root {
+            /* Toned down Red as requested */
+            --matrix-color: #c40000;
+            --matrix-bg: rgba(20, 0, 0, 0.1);
+
             --bg-color: #000000;
-            --tech-red: #ff0000;
+            --tech-red: #c40000;
             --dark-red: #330000;
         }
 
@@ -46,7 +50,7 @@
             background: rgba(0, 0, 0, 0.85);
             padding: 50px;
             border: 2px solid var(--tech-red);
-            box-shadow: 0 0 50px rgba(255, 0, 0, 0.3);
+            box-shadow: 0 0 50px rgba(196, 0, 0, 0.3);
             max-width: 600px;
             width: 90%;
             position: relative;
@@ -130,68 +134,18 @@
 
     <div class="overlay">
         <h1>404</h1>
-        <h2>ACCESS DENIED</h2>
-        <p>This sector is restricted.</p>
-        <p>Your presence has been logged.</p>
+        <h2>ACCESO DENEGADO</h2>
+        <p>Zona restringida</p>
+        <p>TRACE_ID=0xA91F3C7E
+            SESSION_FLAGGED=true
+</p>
         <p style="margin-top: 30px; font-size: 0.9rem;">TRACE ID: 0xA91F44<span class="blink">_</span></p>
 
-        <a href="index.html" class="btn">RETURN TO SAFETY</a>
+        <a href="index.html" class="btn">Volver a zona segura</a>
     </div>
 
-    <script>
-        const canvas = document.getElementById('bg-canvas');
-        const ctx = canvas.getContext('2d');
-        let width, height;
-
-        // Custom Red Matrix Rain
-        const hex = '0123456789ABCDEF';
-
-        function resize() {
-            width = window.innerWidth;
-            height = window.innerHeight;
-            canvas.width = width;
-            canvas.height = height;
-        }
-        window.addEventListener('resize', resize);
-        resize();
-
-        const fontSize = 14;
-        const columns = Math.ceil(width / fontSize);
-        const drops = Array(columns).fill(1);
-
-        function draw() {
-            // Red trail effect
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.fillRect(0, 0, width, height);
-
-            ctx.fillStyle = '#ff0000'; // Pure Red
-            ctx.font = fontSize + 'px monospace';
-
-            for (let i = 0; i < drops.length; i++) {
-                const text = hex.charAt(Math.floor(Math.random() * hex.length));
-
-                // Random flashes of white/bright red
-                if (Math.random() > 0.98) {
-                    ctx.fillStyle = '#ffffff';
-                } else {
-                    ctx.fillStyle = '#ff0000';
-                }
-
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-                // Reset drop to top with randomness
-                if (drops[i] * fontSize > height && Math.random() > 0.975) {
-                    drops[i] = 0;
-                }
-                drops[i]++;
-
-                // Reset color back to red for next character
-                ctx.fillStyle = '#ff0000';
-            }
-        }
-
-        setInterval(draw, 33);
-    </script>
+    <!-- REUSING SHARED ANIMATION SCRIPT -->
+    <script src="static/js/bg_animation.js"></script>
 </body>
 
 </html>

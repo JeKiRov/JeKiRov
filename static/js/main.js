@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // 1. Scroll Animation
     const observerOptions = {
         root: null,
         rootMargin: '0px',
@@ -18,18 +19,18 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(section);
     });
 
-    // Typing Effect
-    const textToType = "AdriÃ¡n Navarro Escudero"; // Placeholder for user's name
+    // 2. Typing Effect (Optimized for long names)
+    // We increase speed significantly to avoid "bugged" feeling
+    const textToType = "ADRIAN NAVARRO ESCUDERO"; // Full Name
     const typingElement = document.getElementById('typing-text');
     let typeIndex = 0;
+    const typingSpeed = 50; // Much faster (was 250ms)
 
     function typeWriter() {
         if (typeIndex < textToType.length) {
             typingElement.textContent += textToType.charAt(typeIndex);
             typeIndex++;
-            typingElement.textContent += textToType.charAt(typeIndex);
-            typeIndex++;
-            setTimeout(typeWriter, 250); // Medium typing speed (250ms)
+            setTimeout(typeWriter, typingSpeed);
         } else {
             // Typing finished
             document.querySelector('.cursor').style.display = 'none';
@@ -37,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
             title.classList.add('typing-done');
 
             // Start Hacking/Scramble Effect
-            let originalText = title.textContent.replace('|', ''); // Remove cursor char if present
+            let originalText = title.innerText.replace('|', '');
             let iterations = 0;
             const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*";
 
@@ -54,106 +55,113 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (iterations >= originalText.length) {
                     clearInterval(interval);
-                    title.innerText = originalText; // Ensure final text is clean
+                    title.innerText = originalText;
                 }
 
-                iterations += 1 / 3;
-            }, 30);
+                iterations += 3; // Much faster scramble (resolves 3 chars per tick)
+            }, 20); // Faster updates (was 30ms)
         }
     }
-
-    // Start typing after a slight delay
+    // Start typing
     setTimeout(typeWriter, 500);
 
-    // 3D Tilt Effect
+    // 3. 3D Tilt Effect
     const cards = document.querySelectorAll('.card[data-tilt]');
-
     cards.forEach(card => {
         card.addEventListener('mousemove', (e) => {
             const rect = card.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
-
             const centerX = rect.width / 2;
             const centerY = rect.height / 2;
-
-            const rotateX = ((y - centerY) / centerY) * -10; // Max rotation deg
+            const rotateX = ((y - centerY) / centerY) * -10;
             const rotateY = ((x - centerX) / centerX) * 10;
-
             card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
         });
-
         card.addEventListener('mouseleave', () => {
             card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
         });
     });
 });
 
-    // Contact Button Copy Functionality
-    const contactBtn = document.getElementById('contact-button');
-    if (contactBtn) {
-        contactBtn.addEventListener('click', () => {
-            const emailText = document.getElementById('email-text').innerText;
-            const hint = document.querySelector('.copy-hint');
+// 4. Copy Email & Toast Notification
+const contactBtn = document.getElementById('contact-button');
+if (contactBtn) {
+    contactBtn.addEventListener('click', () => {
+        const emailText = document.getElementById('email-text').innerText;
 
-            // Fallback for file:// protocol or incompatible browsers
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(emailText).then(() => {
-                    showCopied(hint);
-                }).catch(err => {
-                    fallbackCopyText(emailText, hint);
-                });
-            } else {
-                fallbackCopyText(emailText, hint);
-            }
-        });
-    }
-
-    function fallbackCopyText(text, hintElement) {
-        const textArea = document.createElement('textarea');
-        textArea.value = text;
-        textArea.style.top = '0';
-        textArea.style.left = '0';
-        textArea.style.position = 'fixed'; // Avoid scrolling
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-
-        try {
-            const successful = document.execCommand('copy');
-            if (successful) {
-                showCopied(hintElement);
-            } else {
-                hintElement.innerText = 'Error al copiar';
-            }
-        } catch (err) {
-            hintElement.innerText = 'Error al copiar';
-            console.error('Fallback verify failed', err);
+        // Use standard clipboard API
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(emailText).then(() => {
+                showToast("Â¡Correo Copiado al Portapapeles!");
+            }).catch(err => {
+                fallbackCopyText(emailText);
+            });
+        } else {
+            fallbackCopyText(emailText);
         }
+    });
+}
 
-        document.body.removeChild(textArea);
+function fallbackCopyText(text) {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+            showToast("Â¡Correo Copiado al Portapapeles!");
+        } else {
+            showToast("Error al copiar :(");
+        }
+    } catch (err) {
+        showToast("Error al copiar :(");
+    }
+    document.body.removeChild(textArea);
+}
+
+// Custom Toast Notification Function
+function showToast(message) {
+    // Check if toast already exists
+    const existingToast = document.querySelector('.cyber-toast');
+    if (existingToast) {
+        document.body.removeChild(existingToast);
     }
 
-    function showCopied(element) {
-        const originalText = element.innerText;
-        element.style.color = '#4d88ff'; // Feedback color
-        element.innerText = '¡Copiado!';
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.className = 'cyber-toast';
+    toast.innerText = message;
+
+    // Add Glitch/Scanline effect
+    toast.setAttribute('data-text', message);
+
+    document.body.appendChild(toast);
+
+    // Trigger animation
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 100);
+
+    // Remove after 3 seconds
+    setTimeout(() => {
+        toast.classList.remove('show');
         setTimeout(() => {
-            element.innerText = originalText; // Restore original text
-            element.style.color = '';
-        }, 2000);
-    }
+            if (document.body.contains(toast)) {
+                document.body.removeChild(toast);
+            }
+        }, 500);
+    }, 3000);
+}
 
+// 5. SECURITY: Frame Buster & Console Warning
+if (window.self !== window.top) {
+    window.top.location = window.self.location;
+}
 
-    // ANTI-CLICKJACKING & SECURITY (Frame Buster)
-    // Protege contra ataques donde meten tu web en un iframe invisible
-    if (window.self !== window.top) {
-        window.top.location = window.self.location;
-    }
-
-    // CONSOLE WARNING
-    // Disuade a curiosos de pegar scripts maliciosos (Self-XSS)
-    console.log('%c¡DETENTE!', 'color: red; font-size: 50px; font-weight: bold; text-shadow: 2px 2px black;');
-    console.log('%cEsta es una zona segura. Si alguien te ha dicho que pegues código aquí, es un ataque.', 'font-size: 18px; color: white;');
-    console.log('%cSystem Monitor: Active. All interactions logged.', 'font-size: 12px; color: #4d88ff;');
-
+console.log('%cÂ¡DETENTE!', 'color: red; font-size: 50px; font-weight: bold; text-shadow: 2px 2px black;');
+console.log('%cEsta es una zona segura. System Monitor: Active.', 'font-size: 18px; color: #4d88ff;');

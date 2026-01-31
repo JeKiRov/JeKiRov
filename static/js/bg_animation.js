@@ -33,22 +33,24 @@ window.addEventListener('resize', resize);
 resize();
 
 function draw() {
-    // Semi-transparent black to create trail effect
-    // Very dark navy fade to prevent gray wash and match theme
-    ctx.fillStyle = 'rgba(2, 12, 27, 0.1)';
+    // Dynamic color fetching from CSS variables for easy theming
+    const computedStyle = getComputedStyle(document.body);
+    const matrixColor = computedStyle.getPropertyValue('--matrix-color').trim() || '#4d88ff';
+    const matrixBg = computedStyle.getPropertyValue('--matrix-bg').trim() || 'rgba(2, 12, 27, 0.1)';
+
+    ctx.fillStyle = matrixBg;
     ctx.fillRect(0, 0, width, height);
 
-    ctx.fillStyle = '#4d88ff'; // Light Navy Blue
     ctx.font = fontSize + 'px monospace';
 
     for (let i = 0; i < drops.length; i++) {
         const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
 
-        // Varying colors for depth - mostly Cyberpunk Blue/Cyan
+        // Varying colors for depth
         if (Math.random() > 0.95) {
-            ctx.fillStyle = '#FFF'; // White glint
+            ctx.fillStyle = '#FFF'; // Default white glint
         } else {
-            ctx.fillStyle = 'rgba(77, 136, 255, 0.5)'; // Light Navy Blue
+            ctx.fillStyle = matrixColor; // Use the CSS variable color
         }
 
         const x = i * fontSize;

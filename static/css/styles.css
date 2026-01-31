@@ -341,7 +341,7 @@ h1 {
 }
 
 #contact .content::before {
-    content: 'TERMINAL_ACCESS';
+    content: '';
     position: absolute;
     top: 10px;
     left: 20px;
@@ -356,7 +356,7 @@ h1 {
 /* Cards */
 .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
     gap: 30px;
     margin-top: 50px;
 }
@@ -365,7 +365,13 @@ h1 {
     /* Inherit tech box properties manually for cards */
     background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(5px);
-    padding: 40px;
+    padding: 60px 40px;
+    min-height: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* Fixes button full-width stretch */
     border: 1px solid var(--accent-secondary);
     position: relative;
     transition: transform 0.1s ease-out, box-shadow 0.3s;
@@ -401,12 +407,15 @@ h1 {
 
 .card h3 {
     color: var(--accent-secondary);
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+    font-size: 2rem;
     transform: translateZ(20px);
     /* 3D pop */
 }
 
 .card p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
     transform: translateZ(10px);
 }
 
@@ -470,7 +479,7 @@ h1 {
 .social-links {
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 40px;
     /* Absolute positioning for Hero bottom placement */
     position: absolute;
     bottom: 15%;
@@ -487,13 +496,13 @@ h1 {
 .btn-icon {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 10px 20px;
+    gap: 15px;
+    padding: 15px 30px;
     border: 1px solid var(--accent-secondary);
     color: var(--text-color);
     text-decoration: none;
     font-family: var(--font-mono);
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     background: rgba(0, 0, 0, 0.5);
     clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
     transition: all 0.3s ease;
@@ -578,6 +587,7 @@ h1 {
         opacity: 0;
     }
 }
+
 /* Contact Box */
 .contact-box {
     border: 1px solid var(--accent-secondary);
@@ -619,3 +629,54 @@ h1 {
     text-transform: uppercase;
 }
 
+
+/* Toast Notification */
+.cyber-toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: rgba(0, 0, 0, 0.9);
+    border: 1px solid var(--accent-secondary);
+    color: var(--accent-secondary);
+    padding: 15px 30px;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    font-weight: bold;
+    box-shadow: 0 0 20px rgba(77, 136, 255, 0.3);
+    opacity: 0;
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.cyber-toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+.cyber-toast::before {
+    content: '[ Mensaje del Sistema ]';
+    display: block;
+    font-size: 0.7em;
+    opacity: 0.7;
+    margin-bottom: 5px;
+    border-bottom: 1px solid rgba(77, 136, 255, 0.3);
+}
+
+/* About Me Text Spacing Fix */
+#about .content {
+    max-width: 800px;
+    /* Narrower container for better readability */
+    margin: 0 auto;
+}
+
+#about p {
+    font-size: 1.2rem;
+    line-height: 2;
+    /* Increased vertical breathing room */
+    margin-bottom: 30px;
+    /* Space between paragraphs */
+    text-align: justify;
+    /* Clean edges */
+}
